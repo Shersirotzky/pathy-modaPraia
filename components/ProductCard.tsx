@@ -7,11 +7,14 @@ import type { Product } from "@/types/product";
 export function ProductCard({ product }: { product: Product }) {
   const inStock = hasStock(product);
   const colors = [...new Map(product.variants.map((variant) => [variant.color, variant])).values()];
+  const alternateImage = product.images[1] !== product.images[0] ? product.images[1] : undefined;
   return <article className={`product-card ${!inStock ? "sold-out" : ""}`}>
     <Link href={`/produto/${product.slug}`} className="product-image-wrap" aria-label={`Ver ${product.name}`}>
       <Image src={product.images[0]} alt={product.name} fill sizes="(max-width: 640px) 50vw, (max-width: 1100px) 33vw, 25vw" className="product-image" />
+      {alternateImage && <Image src={alternateImage} alt="" fill sizes="(max-width: 640px) 50vw, (max-width: 1100px) 33vw, 25vw" className="product-image product-image-alternate" />}
       {product.isNew && inStock && <span className="badge">Novo</span>}
       {!inStock && <span className="out-badge">Esgotado</span>}
+      <span className="view-product" aria-hidden="true">Ver produto</span>
     </Link>
     <div className="product-info">
       <p className="product-category">{product.category}</p>

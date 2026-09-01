@@ -35,6 +35,11 @@ img { object-fit:cover; }
 .eyebrow { margin:0 0 12px; font-size:11px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
 .hero h1,.page-title h1,.product-copy h1,.empty-page h1 { font:600 clamp(50px,8vw,92px)/.86 var(--font-display),serif; letter-spacing:-.045em; margin:0 0 24px; }
 .hero-content>p:not(.eyebrow) { font-size:16px; line-height:1.7; max-width:440px; margin:0 0 30px; }
+.hero-typewriter { display:grid; }
+.hero-copy-space,.hero-copy-animated { grid-area:1/1; }
+.hero-copy-space { visibility:hidden; }
+.typewriter-cursor { display:inline-block; width:1px; height:1.05em; margin-left:2px; vertical-align:-.12em; background:currentColor; animation:typewriter-blink .75s step-end infinite; }
+@keyframes typewriter-blink { 50% { opacity:0; } }
 .button { min-height:48px; display:inline-flex; align-items:center; justify-content:center; gap:12px; padding:0 25px; border:0; font-weight:650; font-size:13px; cursor:pointer; transition:.2s; }
 .button svg { width:18px; }
 .button-primary { background:var(--brand); color:white; }
@@ -54,8 +59,9 @@ img { object-fit:cover; }
 .category-card:last-child { display:none; }
 .product-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:28px 10px; }
 .product-image-wrap { position:relative; display:block; aspect-ratio:3/4; overflow:hidden; background:#f0ece4; }
-.product-image { transition:transform .5s; }
-.product-card:hover .product-image { transform:scale(1.025); }
+.product-image { transition:transform .5s,opacity .35s; }
+.product-image-alternate { opacity:0; }
+.view-product { display:none; }
 .product-info { padding:13px 2px 0; }
 .product-category { color:var(--muted); font-size:9px; text-transform:uppercase; letter-spacing:.1em; margin:0 0 6px; }
 .product-info h3 { font:600 18px/1.15 var(--font-display),serif; margin:0 0 8px; }
@@ -69,6 +75,14 @@ img { object-fit:cover; }
 .color-dots { display:flex; align-items:center; gap:5px; margin-top:10px; }
 .color-dots>span { width:12px; height:12px; border-radius:50%; border:1px solid #0002; }
 .color-dots small { color:var(--muted); font-size:9px; margin-left:3px; }
+.featured-carousel { position:relative; }
+.carousel-track { display:flex; gap:10px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; overscroll-behavior-inline:contain; }
+.carousel-track::-webkit-scrollbar { display:none; }
+.carousel-slide { flex:0 0 calc(74% - 5px); min-width:0; scroll-snap-align:start; }
+.carousel-controls { display:flex; justify-content:flex-end; gap:8px; margin:-62px 0 26px; }
+.carousel-controls button { width:42px; height:42px; display:grid; place-items:center; border:1px solid var(--line); background:white; cursor:pointer; }
+.carousel-controls button:disabled { opacity:.3; cursor:default; }
+.carousel-controls svg { width:18px; }
 .editorial-banner { position:relative; min-height:580px; margin-top:75px; background:#285d58; color:white; overflow:hidden; display:flex; align-items:end; }
 .editorial-banner img { opacity:.82; object-position:center top; }
 .editorial-banner::after { content:""; position:absolute; inset:0; background:linear-gradient(0deg,#1e4b48ee 5%,transparent 70%); }
@@ -192,6 +206,8 @@ img { object-fit:cover; }
   .category-grid { grid-template-columns:repeat(5,1fr); gap:14px; }
   .category-card { min-height:300px; }.category-card:last-child { display:flex; }
   .product-grid { grid-template-columns:repeat(3,1fr); gap:45px 18px; }
+  .carousel-track { gap:18px; }
+  .carousel-slide { flex-basis:calc((100% - 18px)/2); }
   .product-info h3 { font-size:21px; }.price-row { font-size:13px; }
   .editorial-banner { min-height:560px; align-items:center; }.editorial-banner img { width:54%!important; left:auto!important; opacity:1; }.editorial-banner::after { background:linear-gradient(90deg,#285d58 46%,transparent 70%); }.editorial-banner>div { padding:60px; width:52%; }.editorial-banner h2 { font-size:58px; }
   .benefits-grid { grid-template-columns:repeat(4,1fr); }.footer-grid { grid-template-columns:1.4fr repeat(3,1fr); }.footer-bottom { flex-direction:row; justify-content:space-between; }
@@ -199,6 +215,14 @@ img { object-fit:cover; }
 }
 @media (min-width:1000px) {
   .header-inner { display:grid; grid-template-columns:180px 1fr 180px; }.mobile-only { display:none; }.logo { justify-self:start; }.main-nav { display:flex; justify-content:center; gap:28px; }.main-nav a { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; position:relative; }.main-nav a::after { content:""; position:absolute; height:1px; background:var(--brand); bottom:-8px; left:50%; right:50%; transition:.2s; }.main-nav a:hover::after { left:0; right:0; }.product-grid { grid-template-columns:repeat(4,1fr); gap-inline:22px; }.hero-image { object-position:center; }.catalog-layout { grid-template-columns:210px 1fr; gap:45px; }.filter-toggle,.filter-mobile-head,.apply-filter { display:none; }.filters { position:static; transform:none; width:auto; padding:0; z-index:auto; }.filter-backdrop { display:none; }
+  .carousel-track { gap:22px; }
+  .carousel-slide { flex-basis:calc((100% - 66px)/4); }
 }
 @media (min-width:1400px) { .product-grid { grid-template-columns:repeat(4,1fr); }.catalog-products .product-grid { grid-template-columns:repeat(4,1fr); } }
-@media (prefers-reduced-motion:reduce) { * { scroll-behavior:auto!important; animation-duration:.01ms!important; transition-duration:.01ms!important; } }
+@media (hover:hover) and (pointer:fine) {
+  .product-card:hover .product-image { transform:scale(1.04); }
+  .product-card:hover .product-image-alternate { opacity:1; }
+  .view-product { display:block; position:absolute; z-index:2; left:50%; bottom:14px; transform:translate(-50%,8px); padding:9px 13px; background:rgba(255,255,255,.9); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; opacity:0; transition:opacity .25s,transform .25s; white-space:nowrap; }
+  .product-card:hover .view-product { opacity:1; transform:translate(-50%,0); }
+}
+@media (prefers-reduced-motion:reduce) { * { scroll-behavior:auto!important; animation-duration:.01ms!important; transition-duration:.01ms!important; }.typewriter-cursor { animation:none; opacity:1; } }
